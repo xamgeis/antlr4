@@ -91,7 +91,12 @@ public final class MurmurHash {
     /// - Returns: the final hash result
     /// 
     public static func finish(_ hashin: UInt32, _ numberOfWords: Int) -> Int {
-        return Int(finish(hashin, byteCount: (numberOfWords &* 4)))
+        let finalHash = finish(hashin, byteCount: (numberOfWords &* 4))
+        if (Int.bitWidth == Int32.bitWidth) {
+            return Int(finalHash % UInt32(Int32.max))
+        } else {
+            return Int(finalHash)
+        }
     }
 
     private static func finish(_ hashin: UInt32, byteCount byteCountInt: Int) -> UInt32 {
@@ -103,7 +108,6 @@ public final class MurmurHash {
         hash ^= (hash >> 13)
         hash = hash &* 0xC2B2AE35
         hash ^= (hash >> 16)
-        //print("murmur finish : \(hash)")
         return hash
     }
 
